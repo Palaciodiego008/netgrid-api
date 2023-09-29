@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterUserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 
 class AuthController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
 
     public function register(Request $request) {
 
@@ -32,7 +30,7 @@ class AuthController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        $user->password = Hash::make( $request->password);
         $user->role = $request->role;
         $user->project_id = $request->project_id;
         $user->save();
@@ -41,8 +39,25 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
-        return response()->json([
-            'message' => 'login'
-        ], 200);
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required']
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $token = $user->createToken('token')->plainTextToken;
+            $cookie = cookie('token', $token, 60*24); // 1 day
+            return response(["token"=>$token], Response::HTTP_OK)->withoutCookie($cookie);
+        }else{
+            return response(["error"=>"Invalid credentials"], Response::HTTP_UNAUTHORIZED);
+        }
+
+
     }
+
+        public function logout(Request $request) {
+            $cookie = Cookie::forget('token');
+            return response(["message"=>"session closed"], Response::HTTP_OK)->withCookie($cookie);
+        }
 }
