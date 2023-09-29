@@ -25,8 +25,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (!$validator->fails()) {
-            // Si la validación falla, devuelve una respuesta JSON con los errores
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -34,6 +33,8 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
+        $user->role = $request->role;
+        $user->project_id = $request->project_id;
         $user->save();
 
         return response($user, Response::HTTP_CREATED);
