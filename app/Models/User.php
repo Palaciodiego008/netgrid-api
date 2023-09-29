@@ -22,8 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'project_id'
-    ];
+     ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -33,4 +32,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function projects() {
+        return $this->hasMany(Project::class, 'user_id');
+    }
 }

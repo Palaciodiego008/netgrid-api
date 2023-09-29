@@ -32,7 +32,6 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make( $request->password);
         $user->role = $request->role;
-        $user->project_id = $request->project_id;
         $user->save();
 
         return response($user, Response::HTTP_CREATED);

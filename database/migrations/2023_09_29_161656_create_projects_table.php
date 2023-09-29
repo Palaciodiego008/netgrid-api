@@ -16,13 +16,15 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->time('start_date');
-            $table->time('end_date');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
             $table->foreignId('task_id')
             ->nullable()
             ->constrained('tasks')
             ->cascadeOnUpdate()
             ->nullOnDelete();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

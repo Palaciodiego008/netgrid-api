@@ -17,11 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('role');
-            $table->foreignId('project_id')
-            ->nullable()
-            ->constrained('projects')
-            ->cascadeOnUpdate()
-            ->nullOnDelete();
             $table->timestamps();
         });
     }
