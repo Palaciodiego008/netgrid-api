@@ -21,9 +21,7 @@ class Task extends Model
         'status'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    public function projects() {
+        return $this->belongsTo(Project::class, 'task_id');
+    }
 }
