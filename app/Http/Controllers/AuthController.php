@@ -56,7 +56,7 @@ class AuthController extends Controller
 
     }
 
-        public function logout(Request $request) {
+        public function logout() {
             $cookie = Cookie::forget('token');
             return response(["message"=>"session closed"], Response::HTTP_OK)->withCookie($cookie);
         }

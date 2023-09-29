@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('role');
             $table->foreignId('project_id')
             ->nullable()
-            ->constrained('project')
+            ->constrained('projects')
             ->cascadeOnUpdate()
             ->nullOnDelete();
             $table->timestamps();
