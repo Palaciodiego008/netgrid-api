@@ -18,10 +18,12 @@ class Task extends Model
     protected $fillable = [
         'title',
         'description',
-        'status'
+        'status',
+        'project_id'
     ];
 
-    public function projects() {
-        return $this->belongsTo(Project::class, 'task_id');
+    public function projects()
+    {
+        return $this->belongsTo(Project::class, 'project_id');
     }
 }

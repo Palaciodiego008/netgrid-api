@@ -21,15 +21,15 @@ class Project extends Model
             'description',
             'start_date',
             'end_date',
-            'task_id',
             'user_id'
         ];
 
-        public function tasks() {
-            return $this->hasMany(Task::class, 'task_id');
+        public function tasks()
+        {
+            return $this->hasMany(Task::class, 'project_id');
         }
 
         public function users() {
-            return $this->belongsTo(User::class, 'project_id');
+            return $this->belongsTo(User::class, 'user_id');
         }
 }

@@ -18,11 +18,6 @@ return new class extends Migration
             $table->string('description');
             $table->timestamp('start_date');
             $table->timestamp('end_date');
-            $table->foreignId('task_id')
-            ->nullable()
-            ->constrained('tasks')
-            ->cascadeOnUpdate()
-            ->nullOnDelete();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
@@ -37,3 +32,4 @@ return new class extends Migration
         Schema::dropIfExists('projects');
     }
 };
+
