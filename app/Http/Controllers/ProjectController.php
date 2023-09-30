@@ -14,25 +14,42 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-       // Current user
-         $user = Auth::user();
+        // Current user
+        $user = Auth::user();
+
         if (!$user) {
             return response()->json([
                 'message' => 'User not found'
             ], 404);
         }
 
-        // Get all projects
-        $projects = $user->projects;
 
+        $projectsQuery = Project::where('user_id', $user->id);
+
+        // Define the filters with the operator to use
+        $filters = [
+            'title' => 'like',
+            'start_date' => '>=',
+            'end_date' => '<=',
+        ];
+
+        // Iterate through the filters and add them to the query
+        foreach ($filters as $filter => $operator) {
+            if ($request->filled($filter)) {
+                $value = $request->input($filter);
+                $projectsQuery->where($filter, $operator, $value);
+            }
+        }
+
+        $filteredProjects = $projectsQuery->get();
         return response()->json([
             'success' => true,
-            'data' => $projects
+            'data' => $filteredProjects,
         ], 200);
-
     }
+
 
     public function store(Request $request)
 {
@@ -52,8 +69,6 @@ class ProjectController extends Controller
         ], 400);
     }
 
-
-    // Obtén el usuario autenticado
     $user = Auth::user();
     if (!$user) {
         return response()->json([
@@ -61,7 +76,6 @@ class ProjectController extends Controller
         ], 404);
     }
 
-    // Crea el proyecto asociado al usuario
     $project = new Project([
         'title' => $request->title,
         'description' => $request->description,
@@ -77,7 +91,7 @@ class ProjectController extends Controller
         'success' => true,
         'data' => $project,
         'message' => 'Project created successfully.'
-    ], 201); // Código 201 significa "Created"
+    ], 201);
 }
 
 
