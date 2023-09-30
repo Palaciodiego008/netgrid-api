@@ -10,15 +10,29 @@ use Illuminate\Support\Facades\Validator;
 class TaskController extends Controller
 {
 
-    public function index(string $projectId)
-    {
-        $tasks = Task::where('project_id', $projectId)->get();
+    public function index(string $projectId, Request $request) {
+    $tasksQuery = Task::where('project_id', $projectId);
 
-        return response()->json([
-            'success' => true,
-            'data' => $tasks
-        ], 200);
+    $filters = [
+        'title' => 'like',
+        'status' => '=',
+    ];
+
+
+    foreach ($filters as $filter => $operator) {
+        if ($request->filled($filter)) {
+            $value = $request->input($filter);
+            $tasksQuery->where($filter, $operator, $value);
+        }
     }
+
+    $filteredTasks = $tasksQuery->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $filteredTasks,
+    ], 200);
+}
 
     public function store(Request $request, string $projectId)
     {
