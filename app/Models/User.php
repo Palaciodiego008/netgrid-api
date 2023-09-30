@@ -36,4 +36,12 @@ class User extends Authenticatable
     public function projects() {
         return $this->hasMany(Project::class, 'user_id');
     }
+
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+
+    public function isRegularUser () {
+        return $this->role === 'regular';
+    }
 }

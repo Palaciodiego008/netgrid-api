@@ -25,17 +25,19 @@ class ProjectController extends Controller
             ], 404);
         }
 
+        if ($user->role === 'admin') {
+            $projectsQuery = Project::query();
+        } elseif ($user->role === 'regular') {
+            $projectsQuery = Project::where('user_id', $user->id);
+        }
 
-        $projectsQuery = Project::where('user_id', $user->id);
-
-        // Define the filters with the operator to use
         $filters = [
             'title' => 'like',
             'start_date' => '>=',
             'end_date' => '<=',
         ];
 
-        // Iterate through the filters and add them to the query
+
         foreach ($filters as $filter => $operator) {
             if ($request->filled($filter)) {
                 $value = $request->input($filter);
@@ -52,78 +54,98 @@ class ProjectController extends Controller
 
 
     public function store(Request $request)
-{
-    // Validación de datos (puedes personalizar esto según tus necesidades)
-    $validatedData = Validator::make($request->all(), [
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'start_date' => 'required',
-        'end_date' => 'required',
-    ]);
+    {
 
-    if ($validatedData->fails()) {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'message' => 'You are not authorized to create projects.'
+            ], 403);
+        }
+
+        $validatedData = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please fill in all required fields.',
+                'errors' => $validatedData->errors()
+            ], 400);
+        }
+
+
+        $project = new Project([
+            'title' => $request->title,
+            'description' => $request->description,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'user_id' => $user->id
+        ]);
+
+
+        $project->save();
+
         return response()->json([
-            'success' => false,
-            'message' => 'Please fill in all required fields.',
-            'errors' => $validatedData->errors()
-        ], 400);
+            'success' => true,
+            'data' => $project,
+            'message' => 'Project created successfully.'
+        ],
+            201
+        );
     }
 
-    $user = Auth::user();
-    if (!$user) {
+
+    public function show(string $id)
+    {
+        $user = Auth::user();
+
+        if ($user->role !== 'admin') {
+            $project = Project::where('id', $id)
+                ->where('user_id', $user->id)
+                ->first();
+
+            if (!$project) {
+                return response()->json([
+                    'message' => 'Project not found or unauthorized'
+                ], 404);
+            }
+        } else {
+            $project = Project::find($id);
+            if (!$project) {
+                return response()->json([
+                    'message' => 'Project not found'
+                ], 404);
+            }
+        }
+
         return response()->json([
-            'message' => 'User not found'
-        ], 404);
+            'success' => true,
+            'data' => $project
+        ], 200);
     }
-
-    $project = new Project([
-        'title' => $request->title,
-        'description' => $request->description,
-        'start_date' => $request->start_date,
-        'end_date' => $request->end_date,
-        'user_id' => $user->id
-    ]);
-
-
-    $project->save();
-
-    return response()->json([
-        'success' => true,
-        'data' => $project,
-        'message' => 'Project created successfully.'
-    ], 201);
-}
-
-
-public function show(string $id)
-{
-    $user = Auth::user();
-
-    // Find the project and check if it belongs to the current user
-    $project = Project::where('id', $id)
-        ->where('user_id', $user->id)
-        ->first();
-
-    if (!$project) {
-        return response()->json([
-            'message' => 'Project not found'
-        ], 404);
-    }
-
-    return response()->json([
-        'success' => true,
-        'data' => $project
-    ], 200);
-}
 
 public function update(Request $request, string $id)
 {
     $user = Auth::user();
+    if ($user->role !== 'admin') {
+        return response()->json([
+            'message' => 'You are not authorized to update projects.'
+        ], 403);
+    }
 
     $project = Project::where('id', $id)
-        ->where('user_id', $user->id)
         ->first();
-
     if (!$project) {
         return response()->json([
             'message' => 'Project not found'
@@ -161,9 +183,14 @@ public function destroy(string $id)
     //Get the authenticated user
     $user = Auth::user();
 
-    // Find the project and check if it belongs to the current user
+    if ($user->role !== 'admin') {
+        return response()->json([
+            'message' => 'You are not authorized to delete projects.'
+        ], 403);
+    }
+
+
     $project = Project::where('id', $id)
-        ->where('user_id', $user->id)
         ->first();
 
     if (!$project) {
