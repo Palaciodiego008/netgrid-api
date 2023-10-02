@@ -1,45 +1,79 @@
 # Proyecto de Gestión de Proyectos en Laravel
 
-Este es un proyecto de gestión de proyectos desarrollado en Laravel, que incluye funciones para registrar usuarios, iniciar sesión, crear, ver, actualizar y eliminar proyectos, así como crear, ver, actualizar y eliminar tareas dentro de los proyectos.
+Este proyecto de gestión de proyectos desarrollado en Laravel ofrece una robusta solución para administrar proyectos y tareas de manera eficiente. A continuación, encontrarás información sobre cómo configurar, ejecutar y utilizar esta aplicación.
 
 ## Requisitos del Sistema
 
-Asegúrate de tener los siguientes requisitos en tu sistema antes de ejecutar la aplicación:
+Antes de ejecutar la aplicación, asegúrate de que tu sistema cumpla con los siguientes requisitos:
 
-- PHP 7.4 o superior
-- Composer
-- MySQL
-- Node.js (para compilar activos CSS/JS)
-- Un servidor web (por ejemplo, Apache o Nginx)
+- PHP 7.4 o una versión superior.
+- Composer.
+- MySQL.
+- Node.js (necesario para compilar activos CSS/JS).
+- Un servidor web (por ejemplo, Apache o Nginx).
 
-Copia el archivo .env.example a .env y configura tus variables de entorno, incluyendo la configuración de la base de datos:
+## Configuración e Instalación
 
-cp .env.example .env
+Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local:
 
-composer install
+1. Clona el repositorio de GitHub en tu máquina local:
 
-php artisan migrate
+   ```bash
+   git clone Palaciodiego008/netgrid-api
+   ```
 
-php artisan serve
+2. Navega al directorio del proyecto:
 
+   ```bash
+   cd proyecto-gestion-laravel
+   ```
 
-Abre tu navegador y accede a http://localhost:8000 para ver la aplicación.
+3. Copia el archivo `.env.example` a `.env` y configura las variables de entorno, incluyendo la configuración de la base de datos:
 
-Uso
-La aplicación proporciona los siguientes endpoints para gestionar proyectos y tareas:
+   ```bash
+   cp .env.example .env
+   ```
 
-`POST /register:` Registrar un nuevo usuario.
-`POST /login:` Iniciar sesión como usuario registrado.
-`POST /logout:` Cerrar sesión.
-`GET /user-profile:` Ver el perfil del usuario autenticado.
-`GET /projects:` Obtener una lista de proyectos (con opciones de filtro).
-`POST /projects:` Crear un nuevo proyecto.
-`GET /projects/{id}:` Ver los detalles de un proyecto específico.
-`PUT /projects/{id}:` Actualizar un proyecto existente.
-`DELETE /projects/{id}:` Eliminar un proyecto.
-`GET /projects/{project}/tasks:` Obtener una lista de tareas en un proyecto (con opciones de filtro).
-`POST /projects/{project}/tasks:` Crear una nueva tarea en un proyecto.
-`GET /projects/{project}/tasks/{id}:` Ver los detalles de una tarea específica.
-`PUT /projects/{project}/tasks/{id}:` Actualizar una tarea existente.
-`DELETE /projects/{project}/tasks/{id}:` Eliminar una tarea.
+4. Instala las dependencias del proyecto con Composer:
+
+   ```bash
+   composer install
+   ```
+
+5. Ejecuta las migraciones para crear las tablas de la base de datos:
+
+   ```bash
+   php artisan migrate
+   ```
+
+6. Inicia el servidor de desarrollo de Laravel:
+
+   ```bash
+   php artisan serve
+   ```
+
+7. Abre tu navegador y accede a `http://localhost:8000` para ver la aplicación en funcionamiento.
+
+## Uso
+
+La aplicación proporciona una serie de endpoints para gestionar proyectos y tareas. A continuación, se enumeran algunos de los principales:
+
+- `POST /register:` Registra un nuevo usuario.
+- `POST /login:` Inicia sesión como usuario registrado.
+- `POST /logout:` Cierra la sesión del usuario.
+- `GET /user-profile:` Muestra el perfil del usuario autenticado.
+- `GET /projects:` Obtiene una lista de proyectos con opciones de filtro.
+- `POST /projects:` Crea un nuevo proyecto.
+- `GET /projects/{id}:` Muestra los detalles de un proyecto específico.
+- `PUT /projects/{id}:` Actualiza un proyecto existente.
+- `DELETE /projects/{id}:` Elimina un proyecto.
+- `GET /projects/{project}/tasks:` Obtiene una lista de tareas en un proyecto con opciones de filtro.
+- `POST /projects/{project}/tasks:` Crea una nueva tarea en un proyecto.
+- `GET /projects/{project}/tasks/{id}:` Muestra los detalles de una tarea específica.
+- `PUT /projects/{project}/tasks/{id}:` Actualiza una tarea existente.
+- `DELETE /projects/{project}/tasks/{id}:` Elimina una tarea.
+
 Asegúrate de autenticarte antes de acceder a los endpoints que requieren autenticación.
+
+
+¡Disfruta de la gestión de proyectos simplificada con esta aplicación desarrollada en Laravel!
