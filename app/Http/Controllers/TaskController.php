@@ -40,7 +40,7 @@ class TaskController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'description' => 'required',
-            'status' => 'required|in:pendiente,en_progreso,completada'
+            'status' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -99,7 +99,7 @@ class TaskController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255',
             'description' => 'string',
-            'status' => 'in:pendiente,en_progreso,completada'
+            'status' => 'required'
         ]);
 
         if ($validator->fails()) {

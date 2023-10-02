@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -32,7 +33,9 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make( $request->password);
         $user->role = $request->role;
+        Log::info('User created: '.$user);
         $user->save();
+
 
         return response($user, Response::HTTP_CREATED);
     }
@@ -51,8 +54,13 @@ class AuthController extends Controller
         }else{
             return response(["error"=>"Invalid credentials"], Response::HTTP_UNAUTHORIZED);
         }
+    }
 
-
+    public function userProfile(Request $request) {
+        return response()->json([
+            "message" => "userProfile OK",
+            "userData" => auth()->user()
+        ], Response::HTTP_OK);
     }
 
         public function logout() {

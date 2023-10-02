@@ -26,6 +26,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('user-profile', [AuthController::class, 'userProfile']);
 
     Route::resource('projects', ProjectController::class);
     Route::prefix('projects')->group(function () {
