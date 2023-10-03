@@ -6,7 +6,7 @@ Este proyecto de gestión de proyectos desarrollado en Laravel ofrece una robust
 
 Antes de ejecutar la aplicación, asegúrate de que tu sistema cumpla con los siguientes requisitos:
 
-- PHP 7.4 o una versión superior.
+- PHP 8.1
 - Composer.
 - MySQL.
 - Node.js (necesario para compilar activos CSS/JS).
